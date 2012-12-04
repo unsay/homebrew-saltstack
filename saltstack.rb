@@ -2,8 +2,8 @@ require 'formula'
 
 class Saltstack < Formula
   homepage 'http://saltstack.org/'
-  url 'https://github.com/downloads/saltstack/salt/salt-0.10.3.tar.gz'
-  sha1 '01d95378dc00c6586ea2c25ccf79a2b3a9cf45c6'
+  url 'https://github.com/downloads/saltstack/salt/salt-0.10.4.tar.gz'
+  sha1 '1d5df8a974123f2af1cc4e2f0f9cdd58648a6b3a'
 
   depends_on 'zeromq'
   depends_on 'swig' => :build
@@ -52,8 +52,8 @@ __END__
 # for f in $PATCHFILES; do diff -u $f.orig $f; done
 #
 
---- salt/config.py.orig	2012-09-26 19:13:37.000000000 -0700
-+++ salt/config.py	2012-10-16 14:46:46.000000000 -0700
+--- salt/config.py.orig	2012-10-23 17:51:35.000000000 -0700
++++ salt/config.py	2012-12-03 16:38:02.000000000 -0800
 @@ -38,7 +38,7 @@
      if not isinstance(file_roots, dict):
          log.warning('The file_roots parameter is not properly formatted,'
@@ -63,7 +63,7 @@ __END__
      for env, dirs in list(file_roots.items()):
          if not isinstance(dirs, list) and not isinstance(dirs, tuple):
              file_roots[env] = []
-@@ -153,12 +153,12 @@
+@@ -152,12 +152,12 @@
              'master_finger': '',
              'user': 'root',
              'root_dir': '/',
@@ -79,7 +79,7 @@ __END__
              'backup_mode': '',
              'renderer': 'yaml_jinja',
              'failhard': False,
-@@ -170,10 +170,10 @@
+@@ -169,10 +169,10 @@
              'top_file': '',
              'file_client': 'remote',
              'file_roots': {
@@ -92,7 +92,7 @@ __END__
                  },
              'hash_type': 'md5',
              'external_nodes': '',
-@@ -191,7 +191,7 @@
+@@ -190,7 +190,7 @@
              'ipc_mode': 'ipc',
              'tcp_pub_port': 4510,
              'tcp_pull_port': 4511,
@@ -101,7 +101,7 @@ __END__
              'log_level': None,
              'log_level_logfile': None,
              'log_datefmt': __dflt_log_datefmt,
-@@ -258,21 +258,21 @@
+@@ -257,21 +257,21 @@
              'publish_port': '4505',
              'user': 'root',
              'worker_threads': 5,
@@ -127,9 +127,9 @@ __END__
 -                'base': ['/srv/pillar'],
 +                'base': ['HOMEBREW_PREFIX/srv/pillar'],
                  },
-             'ext_pillar': {},
-             'syndic_master': '',
-@@ -292,14 +292,14 @@
+             'ext_pillar': [],
+             # TODO - Set this to 2 by default in 0.10.5
+@@ -296,14 +296,14 @@
              'order_masters': False,
              'job_cache': True,
              'minion_data_cache': True,
@@ -146,7 +146,7 @@ __END__
              'cluster_masters': [],
              'cluster_mode': 'paranoid',
              'range_server': 'range:80',
-@@ -308,7 +308,7 @@
+@@ -312,7 +312,7 @@
              'state_output': 'full',
              'nodegroups': {},
              'cython_enable': False,
@@ -155,9 +155,9 @@ __END__
              'verify_env': True,
              'permissive_pki_access': False,
              'default_include': 'master.d/*.conf',
---- salt/utils/parsers.py.orig	2012-09-22 08:43:25.000000000 -0700
-+++ salt/utils/parsers.py	2012-10-16 14:46:46.000000000 -0700
-@@ -165,7 +165,7 @@
+--- salt/utils/parsers.py.orig	2012-10-23 17:51:35.000000000 -0700
++++ salt/utils/parsers.py	2012-12-03 16:38:02.000000000 -0800
+@@ -167,7 +167,7 @@
  
      def _mixin_setup(self):
          self.add_option(
@@ -166,7 +166,7 @@ __END__
              help=('Pass in an alternative configuration directory. Default: '
                    '%default')
          )
-@@ -359,7 +359,7 @@
+@@ -362,7 +362,7 @@
      def _mixin_setup(self):
          self.add_option(
              '--pid-file', dest='pidfile',
@@ -175,7 +175,7 @@ __END__
              help=('Specify the location of the pidfile. Default: %default')
          )
  
-@@ -867,7 +867,7 @@
+@@ -891,7 +891,7 @@
  
          self.add_option(
              '--key-logfile',
@@ -184,9 +184,9 @@ __END__
              help=('Send all output to a file. Default is %default')
          )
  
---- salt/cli/key.py.orig	2012-09-26 09:09:11.000000000 -0700
-+++ salt/cli/key.py	2012-10-16 14:46:46.000000000 -0700
-@@ -65,7 +65,7 @@
+--- salt/cli/key.py.orig	2012-10-23 17:51:35.000000000 -0700
++++ salt/cli/key.py	2012-12-03 16:38:02.000000000 -0800
+@@ -66,7 +66,7 @@
                  'gen_keys': '',
                  'gen_keys_dir': '.',
                  'keysize': 2048,
@@ -195,18 +195,18 @@ __END__
                  'raw_out': False,
                  'yaml_out': False,
                  'json_out': False,
---- salt/client.py.orig	2012-09-16 21:36:10.000000000 -0700
-+++ salt/client.py	2012-10-16 14:46:46.000000000 -0700
-@@ -69,7 +69,7 @@
+--- salt/client.py.orig	2012-10-23 17:51:35.000000000 -0700
++++ salt/client.py	2012-12-03 16:38:02.000000000 -0800
+@@ -67,7 +67,7 @@
      '''
      Connect to the salt master via the local server and via root
      '''
--    def __init__(self, c_path='/etc/salt/master'):
-+    def __init__(self, c_path='HOMEBREW_PREFIX/etc/salt/master'):
-         self.opts = salt.config.master_config(c_path)
+-    def __init__(self, c_path='/etc/salt'):
++    def __init__(self, c_path='HOMEBREW_PREFIX/etc/salt'):
+         self.opts = salt.config.client_config(c_path)
          self.serial = salt.payload.Serial(self.opts)
          self.salt_user = self.__get_user()
-@@ -1107,7 +1107,7 @@
+@@ -963,7 +963,7 @@
      '''
      Create an object used to call salt functions directly on a minion
      '''
